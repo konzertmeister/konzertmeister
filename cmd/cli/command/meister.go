@@ -7,6 +7,7 @@ import (
 
 var (
 	debug bool
+	conf  *config.MeisterConfig
 
 	meisterCmd = &cobra.Command{
 		Use:   "meister",
@@ -31,5 +32,5 @@ func initMeister() {
 		setLogLevelDebug()
 	}
 
-	config.Init(_logger)
+	conf = config.Init(_logger)
 }

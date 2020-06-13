@@ -9,6 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+type MeisterConfig struct {
+	Version  string
+	CacheDir string
+	Meister  map[string]interface{}
+}
+
 const (
 	DEFAULT_CONFIG_NAME = "meister"
 )
@@ -28,7 +34,7 @@ func init() {
 	DEFAULT_CONFIG_PATH = filepath.Join(usr.HomeDir, ".meister")
 }
 
-func Init(logger *zerolog.Logger) {
+func Init(logger *zerolog.Logger) (c *MeisterConfig) {
 	_logger = logger
 
 	viper.SetConfigName("meister")
@@ -46,11 +52,24 @@ func Init(logger *zerolog.Logger) {
 			_logger.Fatal().Err(err).Msgf("Failed to load configuration")
 		}
 	}
+
+	if err := viper.Unmarshal(&c); err != nil {
+		_logger.Fatal().Err(err).Msg("Failed to initialize configuration")
+	}
+
+	return
 }
 
 func initDefaultConfig() {
-	viper.SetDefault("StencilPacksDir", filepath.Join(DEFAULT_CONFIG_PATH, "packs"))
+	viper.SetDefault("version", "1.0")
+	viper.SetDefault("meister.cache_dir", filepath.Join(DEFAULT_CONFIG_PATH, "cache"))
+	viper.SetDefault("meister.stencil_packs.prompt_update", true)
+	viper.SetDefault("meister.stencil_packs.auto_update", false)
 
+	writeDefaultConfig()
+}
+
+func writeDefaultConfig() {
 	// Create the default config path if it doesn't exist
 	if _, err := os.Stat(DEFAULT_CONFIG_PATH); os.IsNotExist(err) {
 		_logger.Info().Msgf("Config directory `%v` not found, creating it", DEFAULT_CONFIG_PATH)

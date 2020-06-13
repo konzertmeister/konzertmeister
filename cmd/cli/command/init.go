@@ -4,8 +4,9 @@
 package command
 
 import (
-	"github.com/konzertmeister/konzertmeister/pkg/stencil"
 	"github.com/spf13/cobra"
+
+	"github.com/konzertmeister/konzertmeister/internal/pkg/discovery"
 )
 
 var initCmd = &cobra.Command{
@@ -29,17 +30,12 @@ func init() {
 5- Execute stancil pack
 */
 func bootstrapProject(cmd *cobra.Command, args []string) (err error) {
-	//stencil.NewStencilPack(args[0])
 	_logger.Debug().Strs("Arguments", args).Msg("Arguments recieved")
-	return
-}
 
-func parseStencil(path string) (st *stencil.Stencil, err error) {
-	st, err = stencil.NewStencil(path)
-	if err != nil {
-		_logger.Err(err).Msgf("Failed to parse stencil `%v`: %v", path, err)
-		return
-	}
+	packUrl := args[0]
+	//projectName := args[1]
+
+	discovery.Initialize(packUrl, conf.CacheDir)
 
 	return
 }

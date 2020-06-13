@@ -1,17 +1,20 @@
 package stencil
 
+import "fmt"
+
 /*
-A stencil pack is a tar archive including all the stencils and directory
+A stencil pack is a git repository including all the stencils and directory
 structure for a meister project skeleton.
 */
 type StencilPack struct {
 	Stencils []*Stencil
 
-	packUrl string
+	packUrl   string
+	localPath PackPath
 }
 
-func NewStencilPack(packUrl string) *StencilPack {
+func NewStencilPack(packUrl fmt.Stringer) *StencilPack {
 	return &StencilPack{
-		packUrl: packUrl,
+		packUrl: packUrl.String(),
 	}
 }

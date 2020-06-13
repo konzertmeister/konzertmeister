@@ -2,6 +2,8 @@ package stencil
 
 import (
 	"testing"
+
+	. "github.com/konzertmeister/konzertmeister/test"
 )
 
 func TestNewStencil(t *testing.T) {
@@ -13,10 +15,5 @@ func TestNewStencil(t *testing.T) {
 	result := len(s.Arguments())
 	expected := 1
 
-	if result != expected {
-		t.Errorf("Invalid number of arguments parsed, expected: %d, got: %d",
-			expected,
-			result,
-		)
-	}
+	Eq(t, result, expected)
 }
